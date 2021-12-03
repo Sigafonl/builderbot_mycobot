@@ -137,7 +137,10 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/kinematics-of-myCobot-pro_node.cpp)
+
 add_executable(endEffector_subscribercpp src/myCobot_pi/endEffector_subscriber.cpp)
+add_executable(Astar_pathfindingcpp src/myCobot_pi/Astar_pathfinding.cpp)
+add_executable(ArmStatecpp src/myCobot_pi/ArmState.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -148,13 +151,23 @@ add_executable(endEffector_subscribercpp src/myCobot_pi/endEffector_subscriber.c
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 add_dependencies(endEffector_subscribercpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(Astar_pathfindingcpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(ArmStatecpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+
 target_link_libraries(endEffector_subscribercpp
+   ${catkin_LIBRARIES}
+ )
+target_link_libraries(Astar_pathfindingcpp
+   ${catkin_LIBRARIES}
+ )
+target_link_libraries(ArmStatecpp
    ${catkin_LIBRARIES}
  )
 

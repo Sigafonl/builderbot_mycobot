@@ -8,6 +8,7 @@
 #include <string>
 
 bool isValidMove(long x, long y, long z){
+    
     return false;
 }
 
@@ -19,17 +20,17 @@ double calcHuristic(long x, long y, long z){
     return 0.0;
 }
 
-/*
-void aStar(){
-    if(!isValidMove){
 
-    }
+// void aStar(){
+//     if(!isValidMove){
+        
+//     }
 
-    if(isDestination){
+//     if(isDestination){
 
-    }
-}
-*/
+//     }
+// }
+
 
 int main(int argc, char **argv){
     return 0;
