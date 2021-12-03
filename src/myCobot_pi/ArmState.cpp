@@ -30,9 +30,9 @@ class ArmState{
         queue<double> closedList;
 
         //Publisher/Subscriber global variables
-        geometry_msgs::Point endEff_coord;
+        //geometry_msgs::Point endEff_coord;
         //geometry_msgs::Point goal_coord;
-        geometry_msgs::PoseStamped goal_position;
+        //geometry_msgs::PoseStamped goal_position;
 
         //Subscriber variables
         ros::Subscriber joint_angles;
@@ -44,7 +44,7 @@ class ArmState{
             //        number_subscriber = nh->subscribe("/number", 1000, &NumberCounter::callback_number, this);
 
             joint_angles = n -> subscribe("/joint_states", 1000, &ArmState::jointStateAngleCallback, this);
-            //joint_poses = n -> subscribe("/tf", 1000, jointStatePoseCallback);
+            joint_poses = n -> subscribe("/tf", 1000, &ArmState::jointStatePoseCallback, this);
             goal_pose = n -> subscribe("/move_base_simple/goal", 1000, &ArmState::goalCallback, this);
         }
 
@@ -60,13 +60,25 @@ class ArmState{
                 jointAngles[i] = msg.position[i];
             }
         }
-        void jointStatePoseCallback(const geometry_msgs::TransformStamped msg){
-            vector<float> position;
 
-            //loop through the msg to get the xyz coordinates of each joint 
+        /**
+         * @brief Loop through the msg to get the xyz coordinates of each joint 
+         * 
+         * @param msg 
+         */
+        void jointStatePoseCallback(const geometry_msgs::TransformStamped msg){
+
+            /*
+            //Loop through the transforms in order to get each joint translation
             for(int i = 0; i < 6; i++){
-                ROS_INFO("hello");
-            }
+                jointPoses[i].push_back(msg.transform.translation.x);
+                jointPoses[i].push_back(msg.transform.translation.y);
+                jointPoses[i].push_back(msg.transform.translation.z);
+
+                //ROS_INFO("Joint [%d] : [%f][%f][%f]", i, jointPoses[i][0], jointPoses[i][1], jointPoses[i][2]);
+            }*/
+            ROS_INFO("transform x : [%f]", msg.transform.translation.x);
+
             
             //add each vector to the jointPoses array
             //for(int i = 0; i < 6; i++){

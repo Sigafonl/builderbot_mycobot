@@ -31,4 +31,7 @@
         <arg name="rvizconfig" value="$(arg rvizconfig)" />
         <arg name="gui" value="$(arg gui)"/>
     </include> -->
+
+    <!-- Launch Capstone files -->
+    <node name= "armState" pkg="kinematics-of-myCobot-pro" type="ArmState.cpp"/>
 </launch>
