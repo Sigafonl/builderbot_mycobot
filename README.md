@@ -1,4 +1,4 @@
-# Kinematics of the myCobot 320 Pro
+# myCobot 320 Pro Builderbot
 
 ## Objective
 
