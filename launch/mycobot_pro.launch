@@ -15,13 +15,19 @@
 		<!-- <rosparam param="source_list" subst_value="true">["joint_states"]</rosparam> -->
 	</node>
 
+    <!-- Show in Rviz -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+    <!-- Launch Capstone files -->
+    <node name= "armState" pkg="mycobot_builderbot" type="ArmStatecpp"/>
+    <node name="control_slider" pkg="pymycobot" type="slider_control.py"/> 
+
     <!-- Open control script -->
 	<!-- <node name="control_slider" pkg="mycobot_280" type="slider_control.py"> 
 		<param name="port" type="string" value="$(arg port)" />
 		<param name="baud" type="int" value="$(arg baud)" />
 	</node> -->
-	<!-- Show in Rviz -->
-	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
 
 
     <!-- Roslaunch by calling another launch file -->
@@ -32,6 +38,4 @@
         <arg name="gui" value="$(arg gui)"/>
     </include> -->
 
-    <!-- Launch Capstone files -->
-    <node name= "armState" pkg="kinematics_of_myCobot_pro" type="ArmStatecpp"/>
 </launch>
