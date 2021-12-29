@@ -33,5 +33,5 @@
     </include> -->
 
     <!-- Launch Capstone files -->
-    <node name= "armState" pkg="kinematics-of-myCobot-pro" type="ArmState.cpp"/>
+    <node name= "armState" pkg="kinematics_of_myCobot_pro" type="ArmStatecpp"/>
 </launch>

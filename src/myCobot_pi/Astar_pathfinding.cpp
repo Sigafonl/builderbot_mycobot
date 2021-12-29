@@ -7,7 +7,7 @@
 #include <array>
 #include <string>
 
-bool isValidMove(long x, long y, long z){
+bool isValidMove(long x, long y, long z, float angle){
     
     return false;
 }
