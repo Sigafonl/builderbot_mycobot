@@ -31,6 +31,7 @@ def callback():
     joint_state_send.velocity = [0]
     joint_state_send.effort = []
 
+    # Initialize marker for rviz
     marker_ = Marker()
     marker_.header.frame_id = "/joint1"
     marker_.ns = "my_namespace"
@@ -44,10 +45,13 @@ def callback():
         for index, value in enumerate(angles):
             data_list.append(value)
 
-        # rospy.loginfo('{}'.format(data_list))
-        joint_state_send.position = data_list
+        #mycobot.send_angle(Angle.J2.value, 0, 50)
 
-        pub.publish(joint_state_send)
+        mycobot.send_angles([0, 0, 0, 90, -180, 0], 20)
+        # rospy.loginfo('{}'.format(data_list))
+        #joint_state_send.position = data_list
+
+        #pub.publish(joint_state_send)
 
         coords = mycobot.get_coords()
 
@@ -79,9 +83,7 @@ def callback():
 
 def listener():
     global mycobot
-    global pub
-    global pub_marker
-
+  
     # Display node 
     #rospy.init_node("display", anonymous=True)
 

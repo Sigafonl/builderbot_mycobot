@@ -1,6 +1,6 @@
 <launch>
-    <!-- <arg name="port" default="/dev/ttyUSB0" />
-    <arg name="baud" default="115200" /> -->
+    <arg name="port" default="/dev/ttyAMA0" />
+    <arg name="baud" default="115200" />
 
     <arg name="model" default="$(find mycobot_description)/urdf/320_urdf/mycobot_pro_320.urdf"/>
     <arg name="rvizconfig" default="$(find mycobot_320)/config/mycobot_320.rviz" />
@@ -9,7 +9,10 @@
     <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
 
     <!-- Combinejoin values to TF -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
+		<rosparam param="source_list" subst_value="true">["joint_states"]</rosparam>
+	</node>
+
 	<node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"> 
 		<!-- <param name="use_gui" value="$(arg gui)" />	 -->
 		<!-- <rosparam param="source_list" subst_value="true">["joint_states"]</rosparam> -->
@@ -19,8 +22,8 @@
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
     <!-- Launch Capstone files -->
-    <node name= "armState" pkg="mycobot_builderbot" type="ArmStatecpp"/>
-    <node name="control_slider" pkg="pymycobot" type="slider_control.py"/> 
+    <!-- <node name= "armState" pkg="mycobot_builderbot" type="ArmStatecpp"/> -->
+    <!--<node name="control_slider" pkg="mycobot_280" type="slider_control.py"/> -->
 
     <!-- Open control script -->
 	<!-- <node name="control_slider" pkg="mycobot_280" type="slider_control.py"> 
