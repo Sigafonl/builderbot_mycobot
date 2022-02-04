@@ -8,10 +8,10 @@ from visualization_msgs.msg import Marker
 from mycobot_communication.msg import MycobotAngles
 
 from pymycobot import PI_PORT, PI_BAUD # For raspberry pi version of mycobot.
-
 from pymycobot.mycobot import MyCobot
 from pymycobot.genre import Angle
 from pymycobot import Coord
+
 
 def callback():
     rate = rospy.Rate(30)  # 30hz
@@ -45,15 +45,21 @@ def callback():
         for index, value in enumerate(angles):
             data_list.append(value)
 
-        #mycobot.send_angle(Angle.J2.value, 0, 50)
 
-        mycobot.send_angles([0, 0, 0, 90, -180, 0], 20)
-        # rospy.loginfo('{}'.format(data_list))
-        #joint_state_send.position = data_list
+        #mycobot.send_angles([0, 0, 0, 0, 0, 0], 20)
+        #mycobot.send_angle(Angle.J3.value, 30, 20)
+        #mycobot.send_angle(Angle.J4.value, -20, 20)
+        #mycobot.send_angle(Angle.J5.value, 50, 20)
 
-        #pub.publish(joint_state_send)
+        rospy.loginfo('{}'.format(data_list))
+        joint_state_send.position = data_list
+
+        pub.publish(joint_state_send)
+
+        mycobot.send_coords([160, 160, 160, 0, 0, 0], 20, 0)
 
         coords = mycobot.get_coords()
+        print(coords)
 
         # marker
         marker_.header.stamp = rospy.Time.now()
@@ -80,8 +86,7 @@ def callback():
         rate.sleep()
 
        
-
-def listener():
+def talker():
     global mycobot
     global pub
     global pub_marker
@@ -103,6 +108,9 @@ def listener():
         pub = rospy.Publisher("joint_states", JointState, queue_size=10)
         pub_marker = rospy.Publisher("visualization_marker", Marker, queue_size=10)
 
+        mycobot.send_angles([0, 0, 0, 0, 0, 0], 20) # set the robot position to the default 
+        rospy.sleep(5) # wait 5 seconds
+
         callback()
 
     except Exception as e:
@@ -122,6 +130,6 @@ def listener():
 
 if __name__ == "__main__":
     try:
-        listener()
+        talker()
     except rospy.ROSInterruptException:
         pass
