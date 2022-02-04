@@ -83,7 +83,9 @@ def callback():
 
 def listener():
     global mycobot
-  
+    global pub
+    global pub_marker
+
     # Display node 
     #rospy.init_node("display", anonymous=True)
 
