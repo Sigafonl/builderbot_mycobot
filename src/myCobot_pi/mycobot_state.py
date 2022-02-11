@@ -56,7 +56,7 @@ def callback():
 
         pub.publish(joint_state_send)
 
-        mycobot.send_coords([160, 160, 160, 0, 0, 0], 20, 0)
+        mycobot.send_coords([90, 90, 300, -135.57, 19.98, 102.03], 20, 0)
 
         coords = mycobot.get_coords()
         print(coords)
@@ -109,6 +109,7 @@ def talker():
         pub_marker = rospy.Publisher("visualization_marker", Marker, queue_size=10)
 
         mycobot.send_angles([0, 0, 0, 0, 0, 0], 20) # set the robot position to the default 
+        print("::get_coords() ==> coords {}\n".format(mycobot.get_coords()))
         rospy.sleep(5) # wait 5 seconds
 
         callback()

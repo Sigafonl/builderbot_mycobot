@@ -2,6 +2,12 @@
     <arg name="port" default="/dev/ttyAMA0" />
     <arg name="baud" default="115200" />
 
+    	<!-- mycobot-topics -->
+    <include file="$(find mycobot_communication)/launch/communication_topic.launch">
+		<arg name="port" value="$(arg port)" />	
+		<arg name="baud" value="$(arg baud)" />	
+    </include>
+
     <arg name="model" default="$(find mycobot_description)/urdf/320_urdf/mycobot_pro_320.urdf"/>
     <arg name="rvizconfig" default="$(find mycobot_320)/config/mycobot_320.rviz" />
     <arg name="gui" default="true" />
@@ -13,10 +19,11 @@
 		<rosparam param="source_list" subst_value="true">["joint_states"]</rosparam>
 	</node>
 
-	<node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"> 
+    
+	<!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"> -->
 		<!-- <param name="use_gui" value="$(arg gui)" />	 -->
 		<!-- <rosparam param="source_list" subst_value="true">["joint_states"]</rosparam> -->
-	</node>
+	<!-- </node> -->
 
     <!-- Show in Rviz -->
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
