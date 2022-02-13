@@ -17,6 +17,11 @@ if __name__ == '__main__':
     # Set the start time
     start = time.time()
 
+    if not mc.is_power_on():
+    # Power the robot arm
+        mc.power_on()
+        print("power is on")
+
     print("sending angles: [-1.49, 115, -153.45, 30, -33.42, 137.9]")
     # Let the robot arm move to the specified position
     #mc.send_angles([-1.49, 115, -153.45, 30, -33.42, 137.9], 80)
