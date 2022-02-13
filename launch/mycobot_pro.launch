@@ -29,7 +29,7 @@
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 
     <!-- Launch Capstone files -->
-    <!-- <node name= "armState" pkg="mycobot_builderbot" type="ArmStatecpp"/> -->
+    <!-- <node name= "armState" pkg="builderbot_mycobot" type="ArmStatecpp"/> -->
     <!--<node name="control_slider" pkg="mycobot_280" type="slider_control.py"/> -->
 
     <!-- Open control script -->

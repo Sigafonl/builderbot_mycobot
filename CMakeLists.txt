@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(mycobot_builderbot)
+project(builderbot_mycobot)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -109,7 +109,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES mycobot_builderbot
+#  LIBRARIES builderbot_mycobot
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
@@ -127,7 +127,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/mycobot_builderbot.cpp
+#   src/${PROJECT_NAME}/builderbot_mycobot.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -138,7 +138,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/mycobot_builderbot_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/builderbot_mycobot_node.cpp)
 
 add_executable(endEffector_subscribercpp src/myCobot_pi/endEffector_subscriber.cpp)
 add_executable(Astar_pathfindingcpp src/myCobot_pi/Astar_pathfinding.cpp)
@@ -220,7 +220,7 @@ target_link_libraries(ArmStatecpp
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_mycobot_builderbot.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_builderbot_mycobot.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

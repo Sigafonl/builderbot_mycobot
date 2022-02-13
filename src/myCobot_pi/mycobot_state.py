@@ -59,10 +59,11 @@ def callback():
         print(coords)
         
         # mycobot.send_coords([90, 90, 300, -135.57, 19.98, 102.03], 20, 0)
-        mycobot.send_coords([-23.1, -132.4, 310.7, -82.79, -1.57, -53.11], 20, 0)
+        # mycobot.send_coords([-23.1, -132.4, 310.7, -82.79, -1.57, -53.11], 20, 0)
 
-        rospy.sleep(3) # wait 2 seconds between movements
-        mycobot.send_coords([-93.9, -118.5, 306.1, -89.08, -8.63, 31.55], 20, 0)
+        mycobot.send_angles( [0, 87, -110.45, 12, -16.42, 0], 20)
+        #rospy.sleep(3) # wait 2 seconds between movements
+        #mycobot.send_coords([-93.9, -118.5, 306.1, -89.08, -8.63, 31.55], 20, 0)
         # mycobot.send_coords([-126.1, -124.1, 306.5, -89.92, 0.43, 39.55], 20, 0)
         # mycobot.send_coords([-99.4, -121.6, 301.6, 88.98, -30, -150.29], 20, 0)  
         # mycobot.send_coords([-99.4, -121.6, 301.6, -89.37, -6.12, 32.04 ], 20, 0)  
