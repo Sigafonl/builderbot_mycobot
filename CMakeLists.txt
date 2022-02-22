@@ -127,7 +127,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/builderbot_mycobot.cpp
+#   ${PROJECT_NAME}/builderbot_mycobot.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -138,11 +138,11 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/builderbot_mycobot_node.cpp)
+# add_executable(${PROJECT_NAME}_node builderbot_mycobot_node.cpp)
 
-add_executable(endEffector_subscribercpp src/myCobot_pi/endEffector_subscriber.cpp)
-add_executable(Astar_pathfindingcpp src/myCobot_pi/Astar_pathfinding.cpp)
-add_executable(ArmStatecpp src/myCobot_pi/ArmState.cpp)
+add_executable(endEffector_subscribercpp myCobot_pi/endEffector_subscriber.cpp)
+add_executable(Astar_pathfindingcpp myCobot_pi/Astar_pathfinding.cpp)
+add_executable(ArmStatecpp myCobot_pi/ArmState.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
