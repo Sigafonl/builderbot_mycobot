@@ -31,11 +31,6 @@ def callback():
     joint_state_send.velocity = [0]
     joint_state_send.effort = []
 
-    # Initialize marker for rviz
-    marker_ = Marker()
-    marker_.header.frame_id = "/joint1"
-    marker_.ns = "my_namespace"
-
     print("publishing ...")
     while not rospy.is_shutdown():
         joint_state_send.header.stamp = rospy.Time.now()
@@ -60,21 +55,16 @@ def callback():
         
         # mycobot.send_coords([90, 90, 300, -135.57, 19.98, 102.03], 20, 0)
         # mycobot.send_coords([-23.1, -132.4, 310.7, -82.79, -1.57, -53.11], 20, 0)
+        # mycobot.send_coords([90, 90, 300, -135.57, 19.98, 102.03], 20, 0)
+        # mycobot.send_coords([-23.1, -132.4, 310.7, -82.79, -1.57, -53.11], 20, 0)
+        mycobot.send_coords([55, -88, 500, -60, 0.4, -88], 20, 0)
 
-        mycobot.send_angles( [0, 87, -110.45, 12, -16.42, 0], 20)
+        #mycobot.send_angles( [0, 87, -110.45, 12, -16.42, 0], 20)
         #rospy.sleep(3) # wait 2 seconds between movements
         #mycobot.send_coords([-93.9, -118.5, 306.1, -89.08, -8.63, 31.55], 20, 0)
         # mycobot.send_coords([-126.1, -124.1, 306.5, -89.92, 0.43, 39.55], 20, 0)
         # mycobot.send_coords([-99.4, -121.6, 301.6, 88.98, -30, -150.29], 20, 0)  
         # mycobot.send_coords([-99.4, -121.6, 301.6, -89.37, -6.12, 32.04 ], 20, 0)  
-
-        # marker
-        marker_.header.stamp = rospy.Time.now()
-        marker_.type = marker_.SPHERE
-        marker_.action = marker_.ADD
-        marker_.scale.x = 0.04
-        marker_.scale.y = 0.04
-        marker_.scale.z = 0.04
 
         # marker position initial
         # print(coords)
@@ -82,21 +72,12 @@ def callback():
             coords = [0, 0, 0, 0, 0, 0]
             rospy.loginfo("error [101]: can not get coord values")
 
-        marker_.pose.position.x = coords[1] / 1000 * -1
-        marker_.pose.position.y = coords[0] / 1000
-        marker_.pose.position.z = coords[2] / 1000
-
-        marker_.color.a = 1.0
-        marker_.color.g = 1.0
-        pub_marker.publish(marker_)
-
         rate.sleep()
 
        
 def talker():
     global mycobot
     global pub
-    global pub_marker
 
     # Display node 
     #rospy.init_node("display", anonymous=True)
@@ -113,8 +94,7 @@ def talker():
         # Joint nodes 
         rospy.init_node("control_joint", anonymous=True)
         pub = rospy.Publisher("joint_states", JointState, queue_size=10)
-        pub_marker = rospy.Publisher("visualization_marker", Marker, queue_size=10)
-
+        
         mycobot.send_angles([0, 0, 0, 0, 0, 0], 20) # set the robot position to the default 
         print("::get_coords() ==> coords {}\n".format(mycobot.get_coords()))
         rospy.sleep(5) # wait 5 seconds

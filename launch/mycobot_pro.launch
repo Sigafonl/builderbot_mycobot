@@ -19,7 +19,7 @@
 		<rosparam param="source_list" subst_value="true">["joint_states"]</rosparam>
 	</node>
 
-    
+    <!-- WE DONT NEED THE GUI SINCE WE ARE PUBLISHING OUR OWN ANGLES -->
 	<!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"> -->
 		<!-- <param name="use_gui" value="$(arg gui)" />	 -->
 		<!-- <rosparam param="source_list" subst_value="true">["joint_states"]</rosparam> -->
@@ -27,6 +27,9 @@
 
     <!-- Show in Rviz -->
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+    <!-- listen and pub the real angles -->
+    <node name="real_listener" pkg="builderbot_mycobot" type="real_mycobot.py" />
 
     <!-- Launch Capstone files -->
     <!-- <node name= "armState" pkg="builderbot_mycobot" type="ArmStatecpp"/> -->
