@@ -45,21 +45,17 @@ def receive_request(req):
     # MoveGroupの生成 - MoveGroup generation
     group_name = "arm_group" # found the name in ~/catkin_ws/src/mycobot_ros/mycobot320/mycobot_320_moveit/config/firefighter.yaml 
     move_group = moveit_commander.MoveGroupCommander(group_name)
+    robot = moveit_commander.RobotCommander()
 
     #TODO: verify that coord system is right, look what is handed back, look what our input is
-    # print("move group: ", move_group)
     print("goal pose: ", req.goal_pose) # currently going in the opposite direction
-    # print("joints: ", req.joints_input.joints)
-    
+    print("joints: ", req.joints_input.joints)
+
     # モーションプランニング - Motion planning
     plan = plan_trajectory(
         move_group, req.goal_pose, req.joints_input.joints)
 
-    print("plan points: \n", plan.joint_trajectory.points)
-
-    # # If the trajectory has no points, planning has failed and we return an empty response
-    # if not plan.joint_trajectory.points:
-    #     return response
+    # If the trajectory has no points, planning has failed and we return an empty response
 
     # レスポンスの生成 - Response generation
     response = MoverServiceResponse()
@@ -68,22 +64,16 @@ def receive_request(req):
         response.trajectory = plan
     else:
         print("fail>>>")
-    
+
     # 後処理 - Post Processing
     move_group.stop()
     move_group.clear_pose_targets()
 
-    # if not plan.joint_trajectory.points:
-    #     print("fail>>>")
-    #     return response
+    print("plan: ", response)
 
-    # response.trajectories.append(plan)
-
-    # move_group.clear_pose_targets()
 
     return response
     
-
 
 # モーションプランニング - Motion planning: Given the start angles 
 def plan_trajectory(move_group, pose_target, start_joints):
@@ -97,26 +87,32 @@ def plan_trajectory(move_group, pose_target, start_joints):
     robot_state.joint_state = joint_state
     move_group.set_start_state(robot_state)
 
-    # # ゴール状態の指定 - Specifying the goal state
+    # TODO: maybe get rid of this?? replace w/ pose_target
+    # ゴール状態の指定 - Specifying the goal state
     pose_goal = geometry_msgs.msg.Pose()
     
-    # # TODO: maybe get rid of this?? replace w/ pose_target
     pose_goal.position = pose_target.position
+    pose_goal.position.x = -pose_goal.position.x
+    # pose_goal.position.y = pose_goal.position.y
+    # pose_goal.position.z = pose_goal.position.z
     pose_goal.orientation = pose_target.orientation
+    # pose_goal.orientation.w = 1.0
 
-    # #TODO: CHECK THE INPUTS, MAKE SURE THEY ARE IN UNITY COORDS, is robot pose same in Unity, what is trajectory handed back -> what does that look like
+    # print("\npose target:\n", pose_goal)
+    # print("\n")
 
-    print("pose goal: ", pose_goal.position)
-
-    # move_group.set_joint_value_target(pose_goal, True)
-    # move_group.setPoseTarget(pose_goal);
     # move_group.set_goal_orientation_tolerance(0.5)
     # move_group.set_goal_position_tolerance(0.5)
-    #move_group.set_planning_time(10);
+    move_group.set_planning_time(10);
+
 
     # プランの作成 - Creating the plan
     move_group.set_joint_value_target(pose_goal, True)
+    # move_group.set_pose_target(pose_goal)
+    # plan = move_group.go(wait=True)
     plan = move_group.plan()
+
+    # # print("\nplan points: \n", plan)
 
     # If the plan does not work, throw an exception 
     if not plan:
@@ -126,6 +122,9 @@ def plan_trajectory(move_group, pose_target, start_joints):
         """.format(pose_target, pose_target)
         raise Exception(exception_str)
     
+    # プランの作成
+    # return move_group.plan()
+
     return planCompat(plan)
 
 
