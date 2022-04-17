@@ -1,0 +1,4 @@
+MyCobotMoveitJoints joints_input
+geometry_msgs/Pose goal_pose
+---
+moveit_msgs/RobotTrajectory trajectory

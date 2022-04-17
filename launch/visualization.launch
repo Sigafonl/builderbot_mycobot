@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find mycobot_320_moveit)/launch/demo.launch" />
+    <?ignore <node name="robot_info" pkg="builderbot_mycobot" type="robot_info.py" args="--wait" output="screen" /> ?>
+</launch>
