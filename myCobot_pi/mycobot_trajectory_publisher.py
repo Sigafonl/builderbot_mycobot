@@ -5,6 +5,7 @@
     Trajectory is then published to PickAndPlaceTrajectory topic.
 """
 import rospy
+import math
 
 from builderbot_mycobot.msg import MyCobotMoveitJoints
 from moveit_msgs.msg import RobotTrajectory
@@ -13,10 +14,8 @@ from moveit_msgs.msg import RobotTrajectory
 def callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard:\n%s", data)
 
-
-def listener():
+def talker():
     rospy.init_node('Trajectory', anonymous=True)
-    # rospy.Subscriber("/mycobot_joints", MyCobotMoveitJoints, callback)
     rospy.Publisher("/mycobot_joints", MyCobotMoveitJoints, callback)
 
     # spin() simply keeps python from exiting until this node is stopped
@@ -24,4 +23,5 @@ def listener():
 
 
 if __name__ == '__main__':
-    listener()
+    talker()
+    #listener()

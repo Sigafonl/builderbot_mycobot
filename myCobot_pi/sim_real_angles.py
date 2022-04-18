@@ -2,6 +2,8 @@
 
 from __future__ import print_function
 
+from requests import get
+
 import rospy
 
 import time
@@ -29,10 +31,17 @@ from pymycobot import Coord
 from builderbot_mycobot.msg import MyCobotMoveitJoints
 from builderbot_mycobot.srv import MoverService, MoverServiceResponse
 
-def sub_callback(data):
+
+joints = []
+
+def radianToEuler(radian):
+    joint = radian * (180/math.pi)
+    return round(joint, 2)
+
+def get_joints(data):
     global joints
-    rospy.loginfo(rospy.get_caller_id() + " I heard:\n%s", data.joints)
-    joints = []
+    rospy.loginfo(rospy.get_caller_id() + "\nIn Sub:\n%s", data)
+    
     joints.append(radianToEuler(data.joints[0]))
     joints.append(radianToEuler(data.joints[1]))
     joints.append(radianToEuler(data.joints[2]))
@@ -40,16 +49,16 @@ def sub_callback(data):
     joints.append(radianToEuler(data.joints[4]))
     joints.append(radianToEuler(data.joints[5]))
 
-    rospy.loginfo(" New joints:\n%s", joints)
+    rospy.loginfo("\nNew joints:\n%s", joints)
+
+    return joints
     
 
-def radianToEuler(radian):
-    joint = radian * (180/math.pi)
-    return round(joint, 2)
-
-
-def pub_callback():
+def pub_callback(data):
     rate = rospy.Rate(30)  # 30hz
+
+    data = rospy.Subscriber("/mycobot_joints", MyCobotMoveitJoints, queue_size=10)
+    joints = get_joints(data)
 
     # pub joint state
     joint_state_send = JointState()
@@ -82,7 +91,7 @@ def pub_callback():
         coords = mycobot.get_coords()
         print(coords)
 
-        # mycobot.send_angles( [0, 87, -110.45, 12, -16.42, 0], 20)
+        mycobot.send_angles(joints, 20)
 
         # marker position initial
         # print(coords)
@@ -92,13 +101,6 @@ def pub_callback():
 
         rate.sleep()
 
-def listener():
-    rospy.init_node('Trajectory_Angles', anonymous=True)
-    rospy.Subscriber("/mycobot_joints", MyCobotMoveitJoints, sub_callback)
-    # rospy.Publisher("/mycobot_joints", MyCobotMoveitJoints, callback)
-
-    # spin() simply keeps python from exiting until this node is stopped
-    rospy.spin()
 
 def talker():
     global mycobot
@@ -140,7 +142,6 @@ def talker():
 
 if __name__ == "__main__":
     try:
-        listener()
-        # talker()
+        talker()
     except rospy.ROSInterruptException:
         pass
