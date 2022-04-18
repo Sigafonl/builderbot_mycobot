@@ -69,8 +69,10 @@ def receive_request(req):
     move_group.stop()
     move_group.clear_pose_targets()
 
-    print("plan: ", response)
+    # print("plan points: ", len(response.trajectory.joint_trajectory.points))
+    # print("plan points: ", response.trajectory.joint_trajectory.points[0])
 
+    print("joints: ", req.joints_input.joints)
 
     return response
     

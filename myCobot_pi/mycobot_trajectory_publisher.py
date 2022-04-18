@@ -16,7 +16,8 @@ def callback(data):
 
 def listener():
     rospy.init_node('Trajectory', anonymous=True)
-    rospy.Subscriber("/mycobot_joints", MyCobotMoveitJoints, callback)
+    # rospy.Subscriber("/mycobot_joints", MyCobotMoveitJoints, callback)
+    rospy.Publisher("/mycobot_joints", MyCobotMoveitJoints, callback)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
