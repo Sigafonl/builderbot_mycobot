@@ -13,7 +13,8 @@
     <!--モーションプランニングサービスの実行 Running motion planning service -->
     <node name="mover" pkg="builderbot_mycobot" type="mover.py" args="--wait" output="screen"> </node> 
     <node name="mycobot_trajectory_publisher" pkg="builderbot_mycobot" type="mycobot_trajectory_publisher.py" args="--wait" output="screen"/> 
-  
+    <node name="joint_publisher" pkg="builderbot_mycobot" type="joint_publisher.py" args="--wait" output="screen"/> 
+
     <!-- Show visualization -->
     <include file="$(find builderbot_mycobot)/launch/visualization.launch" />
 

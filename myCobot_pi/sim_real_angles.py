@@ -28,37 +28,22 @@ from pymycobot.mycobot import MyCobot
 from pymycobot.genre import Angle
 from pymycobot import Coord
 
-from builderbot_mycobot.msg import MyCobotMoveitJoints
+from builderbot_mycobot.msg import EulerJoints
 from builderbot_mycobot.srv import MoverService, MoverServiceResponse
 
-
-joints = []
-
-def radianToEuler(radian):
-    joint = radian * (180/math.pi)
-    return round(joint, 2)
+global joints
 
 def get_joints(data):
-    global joints
-    rospy.loginfo(rospy.get_caller_id() + "\nIn Sub:\n%s", data)
-    
-    joints.append(radianToEuler(data.joints[0]))
-    joints.append(radianToEuler(data.joints[1]))
-    joints.append(radianToEuler(data.joints[2]))
-    joints.append(radianToEuler(data.joints[3]))
-    joints.append(radianToEuler(data.joints[4]))
-    joints.append(radianToEuler(data.joints[5]))
+    joints = data.joints
+    rospy.loginfo(rospy.get_caller_id() + "\nRobot joint angles:\n%s", joints)
 
-    rospy.loginfo("\nNew joints:\n%s", joints)
-
-    return joints
-    
 
 def pub_callback(data):
     rate = rospy.Rate(30)  # 30hz
 
-    data = rospy.Subscriber("/mycobot_joints", MyCobotMoveitJoints, queue_size=10)
-    joints = get_joints(data)
+    rospy.Subscriber("/euler_joints", EulerJoints, get_joints)
+
+    rospy.sleep(3)
 
     # pub joint state
     joint_state_send = JointState()

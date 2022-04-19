@@ -7,12 +7,13 @@
 import rospy
 import math
 
-from builderbot_mycobot.msg import MyCobotMoveitJoints
+from builderbot_mycobot.msg import MyCobotMoveitJoints, EulerJoints
 from moveit_msgs.msg import RobotTrajectory
 
 
 def callback(data):
     rospy.loginfo(rospy.get_caller_id() + "I heard:\n%s", data)
+
 
 def talker():
     rospy.init_node('Trajectory', anonymous=True)
@@ -24,4 +25,3 @@ def talker():
 
 if __name__ == '__main__':
     talker()
-    #listener()
