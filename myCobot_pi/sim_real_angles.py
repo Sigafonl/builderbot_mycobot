@@ -122,7 +122,6 @@ def control():
      # Joint nodes 
     rospy.init_node("control_joints", anonymous=True)
     rospy.Subscriber("/euler_joints", EulerJoints, get_joints) #grab the joint angles sent from unity
-
     # Set up and move the real robot
     talker()
 
@@ -133,7 +132,6 @@ def control():
 
 if __name__ == "__main__":
     try:
-        
-        
+        control()
     except rospy.ROSInterruptException:
         pass
