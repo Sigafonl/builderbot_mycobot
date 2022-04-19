@@ -2,8 +2,6 @@
 
 from __future__ import print_function
 
-from requests import get
-
 import rospy
 
 import time
@@ -31,19 +29,21 @@ from pymycobot import Coord
 from builderbot_mycobot.msg import EulerJoints
 from builderbot_mycobot.srv import MoverService, MoverServiceResponse
 
-global joints
+joints = []
+pub = rospy.Publisher("joint_states", JointState, queue_size=10)
 
 def get_joints(data):
-    joints = data.joints
-    rospy.loginfo(rospy.get_caller_id() + "\nRobot joint angles:\n%s", joints)
+    global joints
+    joints.append(data.joints[0])
+    joints.append(data.joints[1])
+    joints.append(data.joints[2])
+    joints.append(data.joints[3])
+    joints.append(data.joints[4])
+    joints.append(data.joints[5])
+    rospy.loginfo("\nRobot joint angles:\n%s", joints)
 
-
-def pub_callback(data):
+def pub_callback():
     rate = rospy.Rate(30)  # 30hz
-
-    rospy.Subscriber("/euler_joints", EulerJoints, get_joints)
-
-    rospy.sleep(3)
 
     # pub joint state
     joint_state_send = JointState()
@@ -62,6 +62,7 @@ def pub_callback(data):
 
     print("publishing ...")
     while not rospy.is_shutdown():
+        global joints
         joint_state_send.header.stamp = rospy.Time.now()
 
         angles = mycobot.get_radians()
@@ -69,12 +70,12 @@ def pub_callback(data):
         for index, value in enumerate(angles):
             data_list.append(value)
 
-        rospy.loginfo('Current position: {}'.format(data_list))
+        # rospy.loginfo('Current position: {}'.format(data_list))
         joint_state_send.position = data_list
 
         pub.publish(joint_state_send)
         coords = mycobot.get_coords()
-        print(coords)
+        # print(coords)
 
         mycobot.send_angles(joints, 20)
 
@@ -100,14 +101,10 @@ def talker():
     try:
         mycobot = MyCobot(port, baud)
 
-        # Joint nodes 
-        rospy.init_node("control_joint", anonymous=True)
-        pub = rospy.Publisher("joint_states", JointState, queue_size=10)
-        
         mycobot.send_angles([0, 0, 0, 0, 0, 0], 20) # set the robot position to the default 
         print("::get_coords() ==> coords {}\n".format(mycobot.get_coords()))
-        rospy.sleep(5) # wait 5 seconds
-
+        rospy.sleep(2) # wait 5 seconds
+        
         pub_callback()
 
     except Exception as e:
@@ -121,12 +118,22 @@ def talker():
         )
         exit(1)
 
+def control():
+     # Joint nodes 
+    rospy.init_node("control_joints", anonymous=True)
+    rospy.Subscriber("/euler_joints", EulerJoints, get_joints) #grab the joint angles sent from unity
+
+    # Set up and move the real robot
+    talker()
+
     # spin() simply keeps python from exiting until this node is stopped
     print("spin ...")
     rospy.spin()
 
+
 if __name__ == "__main__":
     try:
-        talker()
+        
+        
     except rospy.ROSInterruptException:
         pass
