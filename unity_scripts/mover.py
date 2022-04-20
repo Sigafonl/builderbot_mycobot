@@ -55,8 +55,12 @@ def receive_request(req):
     plan = plan_trajectory(
         move_group, req.goal_pose, req.joints_input.joints)
 
-    # If the trajectory has no points, planning has failed and we return an empty response
 
+    # 後処理 - Post Processing
+    move_group.stop()
+    move_group.clear_pose_targets()
+
+    # If the trajectory has no points, planning has failed and we return an empty response
     # レスポンスの生成 - Response generation
     response = MoverServiceResponse()
     if plan.joint_trajectory.points:
@@ -65,9 +69,6 @@ def receive_request(req):
     else:
         print("fail>>>")
 
-    # 後処理 - Post Processing
-    move_group.stop()
-    move_group.clear_pose_targets()
 
     # print("plan points: ", len(response.trajectory.joint_trajectory.points))
     # print("plan points: ", response.trajectory.joint_trajectory.points[0])
@@ -95,8 +96,12 @@ def plan_trajectory(move_group, pose_target, start_joints):
     
     pose_goal.position = pose_target.position
     pose_goal.position.x = -pose_goal.position.x
-    # pose_goal.position.y = pose_goal.position.y
-    # pose_goal.position.z = pose_goal.position.z
+    pose_goal.position.y = pose_goal.position.y
+    pose_goal.position.z = pose_goal.position.z
+
+    # pose_goal.position.x = pose_target.position.x
+    # pose_goal.position.y = -pose_target.position.y
+    # pose_goal.position.z = -pose_target.position.z
     pose_goal.orientation = pose_target.orientation
     # pose_goal.orientation.w = 1.0
 
