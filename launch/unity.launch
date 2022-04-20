@@ -1,0 +1,21 @@
+<launch>
+    
+
+    <arg name="tcp_ip" default="0.0.0.0"/>
+    <arg name="tcp_port" default="10000"/>
+    
+    <!-- Set up endpoint -->
+    <node name="server_endpoint" pkg="ros_tcp_endpoint" type="default_server_endpoint.py" args="--wait" output="screen" respawn="true">
+		<param name="tcp_ip" type="string" value="$(arg tcp_ip)"/>
+        <param name="tcp_port" type="int" value="$(arg tcp_port)"/>
+	</node>
+
+    <!--モーションプランニングサービスの実行 Running motion planning service -->
+    <node name="mover" pkg="builderbot_mycobot" type="mover.py" args="--wait" output="screen"> </node> 
+    <node name="mycobot_trajectory_publisher" pkg="builderbot_mycobot" type="mycobot_trajectory_publisher.py" args="--wait" output="screen"/> 
+    <node name="joint_publisher" pkg="builderbot_mycobot" type="joint_publisher.py" args="--wait" output="screen"/> 
+
+    <!-- Show visualization -->
+    <include file="$(find builderbot_mycobot)/launch/visualization.launch" />
+
+</launch>

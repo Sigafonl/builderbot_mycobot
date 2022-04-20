@@ -1,11 +1,11 @@
 <launch>
-    <arg name="port" default="/dev/ttyAMA0" />
-    <arg name="baud" default="115200" />
+    <!-- <arg name="port" default="/dev/ttyAMA0" /> --> 
+    <!-- <arg name="baud" default="115200" /> -->
 
     	<!-- mycobot-topics -->
     <include file="$(find mycobot_communication)/launch/communication_topic.launch">
-		<arg name="port" value="$(arg port)" />	
-		<arg name="baud" value="$(arg baud)" />	
+		<!-- <arg name="port" value="$(arg port)" />	-->
+		<!-- <arg name="baud" value="$(arg baud)" />	-->
     </include>
 
     <arg name="model" default="$(find mycobot_description)/urdf/320_urdf/mycobot_pro_320.urdf"/>
@@ -26,7 +26,7 @@
 	<!-- </node> -->
 
     <!-- Show in Rviz -->
-	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+	<!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> -->
 
     <!-- listen and pub the real angles -->
     <node name="real_listener" pkg="builderbot_mycobot" type="real_mycobot.py" />
