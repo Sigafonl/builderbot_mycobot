@@ -142,9 +142,8 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node builderbot_mycobot_node.cpp)
 
-add_executable(endEffector_subscribercpp myCobot_pi/endEffector_subscriber.cpp)
-add_executable(Astar_pathfindingcpp myCobot_pi/Astar_pathfinding.cpp)
-add_executable(ArmStatecpp myCobot_pi/ArmState.cpp)
+add_executable(Astar_pathfindingcpp myCobot_pi/AstarAttempt/Astar_pathfinding.cpp)
+add_executable(ArmStatecpp myCobot_pi/AstarAttempt/ArmState.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -156,7 +155,6 @@ add_executable(ArmStatecpp myCobot_pi/ArmState.cpp)
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_dependencies(endEffector_subscribercpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(Astar_pathfindingcpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(ArmStatecpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
@@ -165,9 +163,6 @@ add_dependencies(ArmStatecpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORT
 #   ${catkin_LIBRARIES}
 # )
 
-target_link_libraries(endEffector_subscribercpp
-   ${catkin_LIBRARIES}
- )
 target_link_libraries(Astar_pathfindingcpp
    ${catkin_LIBRARIES}
  )

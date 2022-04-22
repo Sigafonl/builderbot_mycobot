@@ -96,16 +96,14 @@ def plan_trajectory(move_group, pose_target, start_joints):
     
     pose_goal.position = pose_target.position
     pose_goal.position.x = -pose_goal.position.x
-    pose_goal.position.y = pose_goal.position.y
-    pose_goal.position.z = pose_goal.position.z
 
-    # pose_goal.position.x = pose_target.position.x
-    # pose_goal.position.y = -pose_target.position.y
-    # pose_goal.position.z = -pose_target.position.z
+    # pose_goal.position.x = pose_target.position.y
+    # pose_goal.position.y = pose_target.position.z 
+    # pose_goal.position.z = -pose_target.position.x 
     pose_goal.orientation = pose_target.orientation
     # pose_goal.orientation.w = 1.0
 
-    # print("\npose target:\n", pose_goal)
+    print("\npose target:\n", pose_goal)
     # print("\n")
 
     # move_group.set_goal_orientation_tolerance(0.5)
@@ -119,7 +117,7 @@ def plan_trajectory(move_group, pose_target, start_joints):
     # plan = move_group.go(wait=True)
     plan = move_group.plan()
 
-    # # print("\nplan points: \n", plan)
+    # print("\nplan points: \n", plan)
 
     # If the plan does not work, throw an exception 
     if not plan:
