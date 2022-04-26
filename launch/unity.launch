@@ -1,6 +1,4 @@
 <launch>
-    
-
     <arg name="tcp_ip" default="0.0.0.0"/>
     <arg name="tcp_port" default="10000"/>
     
@@ -16,6 +14,6 @@
     <node name="joint_publisher" pkg="builderbot_mycobot" type="joint_publisher.py" args="--wait" output="screen"/> 
 
     <!-- Show visualization -->
-    <include file="$(find builderbot_mycobot)/launch/visualization.launch" />
-
+    <include file="$(find mycobot_320_moveit)/launch/demo.launch" />
+    <?ignore <node name="robot_info" pkg="builderbot_mycobot" type="robot_info.py" args="--wait" output="screen" /> ?>
 </launch>

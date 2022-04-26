@@ -52,13 +52,10 @@ def receive_request(req):
     print("joints: ", req.joints_input.joints)
 
     # モーションプランニング - Motion planning
-    plan = plan_trajectory(
+    plan = go_to_pose_goal(
         move_group, req.goal_pose, req.joints_input.joints)
 
-
-    # 後処理 - Post Processing
-    move_group.stop()
-    move_group.clear_pose_targets()
+    
 
     # If the trajectory has no points, planning has failed and we return an empty response
     # レスポンスの生成 - Response generation
@@ -79,9 +76,8 @@ def receive_request(req):
 
     return response
     
-
 # モーションプランニング - Motion planning: Given the start angles 
-def plan_trajectory(move_group, pose_target, start_joints):
+def go_to_pose_goal(move_group, pose_target, start_joints):
     # スタート状態の指定 - Specifying the start state
     joint_state = JointState()
     joint_state.name = joint_names
@@ -92,50 +88,39 @@ def plan_trajectory(move_group, pose_target, start_joints):
     robot_state.joint_state = joint_state
     move_group.set_start_state(robot_state)
 
-    # TODO: maybe get rid of this?? replace w/ pose_target
-    # ゴール状態の指定 - Specifying the goal state
+    ## Planning to a Pose Goal
+    ## ^^^^^^^^^^^^^^^^^^^^^^^
+    ## We can plan a motion for this group to a desired pose for the
+    ## end-effector:
     pose_goal = geometry_msgs.msg.Pose()
-    
-    pose_goal.position = pose_target.position
-    # -0.29, 0.2, 1
 
-    pose_goal.position.x = -.29
-    pose_goal.position.y = 0.2
-    pose_goal.position.z = 1
-    # pose_goal.position.x = pose_target.position.y
-    # pose_goal.position.y = pose_target.position.z 
-    # pose_goal.position.z = -pose_target.position.x 
-    pose_goal.orientation = pose_target.orientation
-    # pose_goal.orientation.w = 1.0
+    pose_goal.orientation.w = 1.0
+    pose_goal.position.x = 0.3
+    pose_goal.position.y = 0.02
+    pose_goal.position.z = 0.25
 
+    move_group.set_pose_target(pose_goal)
+
+    ## Now, we call the planner to compute the plan and execute it.
+    plan = move_group.go(wait=True)
+
+    # 後処理 - Post Processing
+    # Calling `stop()` ensures that there is no residual movement
+    move_group.stop()
+
+    # It is always good to clear your targets after planning with poses.
+    # Note: there is no equivalent function for clear_joint_value_targets()
+    move_group.clear_pose_targets()
+
+    # For testing 
+    current_pose = move_group.get_current_pose().pose
+    joint_goal = move_group.get_current_joint_values()
     print("\npose target sent to moveit:\n", pose_goal)
-    # print("\n")
+    print("\nJoints: \n", joint_goal)
+    print("\nCurrent goal: \n",current_pose)
 
-    # move_group.set_goal_orientation_tolerance(0.5)
-    # move_group.set_goal_position_tolerance(0.5)
-    move_group.set_planning_time(10);
-
-
-    # プランの作成 - Creating the plan
-    move_group.set_joint_value_target(pose_goal, True)
-    # move_group.set_pose_target(pose_goal)
-    # plan = move_group.go(wait=True)
-    plan = move_group.plan()
-
-    # print("\nplan points: \n", plan)
-
-    # If the plan does not work, throw an exception 
-    if not plan:
-        exception_str = """
-            Trajectory could not be planned for a destination of {} with starting joint angles {}.
-            Please make sure target and destination are reachable by the robot.
-        """.format(pose_target, pose_target)
-        raise Exception(exception_str)
-    
-    # プランの作成
-    # return move_group.plan()
-
-    return planCompat(plan)
+    print("\nPlan: \n", plan)
+    return plan
 
 
 # メイン - Main
