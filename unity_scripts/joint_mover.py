@@ -99,7 +99,7 @@ class MoveGroup(object):
                 return plan
 
     # モーションプランニング - Motion planning: Given the start angles 
-    def go_to_pose_goal(self):
+    def go_to_pose_goal(self, pose_target):
         move_group = self.move_group
         
         ## Planning to a Pose Goal
@@ -108,10 +108,19 @@ class MoveGroup(object):
         ## end-effector:
         pose_goal = geometry_msgs.msg.Pose()
 
-        pose_goal.orientation.w = 1.0
-        pose_goal.position.x = 0.3
-        pose_goal.position.y = 0.02
-        pose_goal.position.z = 0.25
+        # pose_goal.orientation.x = 0
+        # pose_goal.orientation.y = 0
+        # pose_goal.orientation.z = 0
+        # pose_goal.orientation.w = 1.0
+
+        # pose_goal.position.x = 0.3
+        # pose_goal.position.y = 0.02
+        # pose_goal.position.z = 0.25
+
+        pose_goal.position.x = -pose_target.position.z
+        pose_goal.position.y = pose_target.position.x 
+        pose_goal.position.z = pose_target.position.y 
+        pose_goal.orientation = pose_target.orientation
 
         move_group.set_pose_target(pose_goal)
 
@@ -135,7 +144,7 @@ class MoveGroup(object):
 
         return plan
 
-    def plan_cartesian_path(self, scale=1):
+    def plan_cartesian_path(self, scale=0):
         ## Cartesian Paths
         ## ^^^^^^^^^^^^^^^
         ## You can plan a Cartesian path directly by specifying a list of waypoints
@@ -147,14 +156,14 @@ class MoveGroup(object):
         waypoints = []
 
         wpose = move_group.get_current_pose().pose
-        wpose.position.z -= scale * 0.1  # First move up (z)
-        wpose.position.y += scale * 0.2  # and sideways (y)
+        wpose.position.z -= scale  # First move up (z)
+        wpose.position.y += scale # and sideways (y)
         waypoints.append(copy.deepcopy(wpose))
 
-        wpose.position.x += scale * 0.1  # Second move forward/backwards in (x)
+        wpose.position.x += scale # Second move forward/backwards in (x)
         waypoints.append(copy.deepcopy(wpose))
 
-        wpose.position.y -= scale * 0.1  # Third move sideways (y)
+        wpose.position.y -= scale  # Third move sideways (y)
         waypoints.append(copy.deepcopy(wpose))
 
         # We want the Cartesian path to be interpolated at a resolution of 1 cm
@@ -179,7 +188,7 @@ def receive_request(req):
     print("joints before: ", req.joints_input.joints)
 
     # モーションプランニング - Motion planning
-    mover.go_to_pose_goal()
+    mover.go_to_pose_goal(req.goal_pose)
     cartesian_plan, fraction = mover.plan_cartesian_path()
 
     # If the trajectory has no points, planning has failed and we return an empty response
