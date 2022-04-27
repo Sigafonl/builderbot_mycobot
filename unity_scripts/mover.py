@@ -60,6 +60,8 @@ def receive_request(req):
     move_group.stop()
     move_group.clear_pose_targets()
 
+    print("plan: ", plan)
+
     # If the trajectory has no points, planning has failed and we return an empty response
     # レスポンスの生成 - Response generation
     response = MoverServiceResponse()
@@ -74,7 +76,7 @@ def receive_request(req):
     # print("plan points: ", len(response.trajectory.joint_trajectory.points))
     # print("plan points: ", response.trajectory.joint_trajectory.points[0])
 
-    print("joints: ", req.joints_input.joints)
+    print("\nJoints after: ", req.joints_input.joints)
     print()
 
     return response

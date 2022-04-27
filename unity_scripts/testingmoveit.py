@@ -442,6 +442,8 @@ def main():
         input("============ Press `Enter` to plan and display a Cartesian path ...")
         cartesian_plan, fraction = tutorial.plan_cartesian_path()
 
+        print("Cartesian plan: ", cartesian_plan)
+
         input(
             "============ Press `Enter` to display a saved trajectory (this will replay the Cartesian path)  ..."
         )
