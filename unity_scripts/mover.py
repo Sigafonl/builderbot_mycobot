@@ -60,6 +60,8 @@ def receive_request(req):
     move_group.stop()
     move_group.clear_pose_targets()
 
+    print("plan: ", plan)
+
     # If the trajectory has no points, planning has failed and we return an empty response
     # レスポンスの生成 - Response generation
     response = MoverServiceResponse()
@@ -69,11 +71,13 @@ def receive_request(req):
     else:
         print("fail>>>")
 
+    # what are we putting in and what are we getting out -> give 000-> what do we get back?
 
     # print("plan points: ", len(response.trajectory.joint_trajectory.points))
     # print("plan points: ", response.trajectory.joint_trajectory.points[0])
 
-    print("joints: ", req.joints_input.joints)
+    print("\nJoints after: ", req.joints_input.joints)
+    print()
 
     return response
     
@@ -95,17 +99,18 @@ def plan_trajectory(move_group, pose_target, start_joints):
     pose_goal = geometry_msgs.msg.Pose()
     
     pose_goal.position = pose_target.position
-    pose_goal.position.x = -pose_goal.position.x
-    pose_goal.position.y = pose_goal.position.y
-    pose_goal.position.z = pose_goal.position.z
+    # -0.29, 0.2, 1
 
-    # pose_goal.position.x = pose_target.position.x
-    # pose_goal.position.y = -pose_target.position.y
-    # pose_goal.position.z = -pose_target.position.z
+    pose_goal.position.x = -.29
+    pose_goal.position.y = 0.2
+    pose_goal.position.z = 1
+    # pose_goal.position.x = pose_target.position.y
+    # pose_goal.position.y = pose_target.position.z 
+    # pose_goal.position.z = -pose_target.position.x 
     pose_goal.orientation = pose_target.orientation
     # pose_goal.orientation.w = 1.0
 
-    # print("\npose target:\n", pose_goal)
+    print("\npose target sent to moveit:\n", pose_goal)
     # print("\n")
 
     # move_group.set_goal_orientation_tolerance(0.5)
@@ -119,7 +124,7 @@ def plan_trajectory(move_group, pose_target, start_joints):
     # plan = move_group.go(wait=True)
     plan = move_group.plan()
 
-    # # print("\nplan points: \n", plan)
+    # print("\nplan points: \n", plan)
 
     # If the plan does not work, throw an exception 
     if not plan:
@@ -150,6 +155,7 @@ def main():
     # ノード終了まで待機 - Wait until the node finishes 
     rospy.spin()
 
+    # 
 
 if __name__ == "__main__":
     main()
