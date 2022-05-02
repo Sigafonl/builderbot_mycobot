@@ -8,6 +8,14 @@ if __name__ == '__main__':
     print("Try connect real mycobot...")
     mc = MyCobot(PI_PORT, 115200)
 
+    if(mc.is_all_servo_enable() == 0):
+        mc.focus_servo(1)
+        mc.focus_servo(2)
+        mc.focus_servo(3)
+        mc.focus_servo(4)
+        mc.focus_servo(5)
+        mc.focus_servo(6)
+
     print("sending angles: [73.7, 135.6, -132.5, 47, -76.8, 93.5]")
     mc.send_angles([-90, 130.6, -130.5, -35, -90, 0], 30)
 
