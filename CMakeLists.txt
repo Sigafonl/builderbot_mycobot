@@ -57,6 +57,7 @@ add_message_files(
   FILES
   MyCobotMoveitJoints.msg
   EulerJoints.msg
+  Coordinate.msg
 )
 
 ## Generate services in the 'srv' folder

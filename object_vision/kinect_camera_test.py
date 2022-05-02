@@ -13,14 +13,16 @@ while True:
         frameD = kinect._depth_frame_data # retrieving depth frame data
         frame = frame.astype(np.uint8)
         frame = np.reshape(frame, (424, 512))
+
         frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
         def click_event(event, x, y, flags, param):
             if event == cv2.EVENT_LBUTTONDOWN:
                 print(x, y)
             if event == cv2.EVENT_RBUTTONDOWN:
-                Pixel_Depth = frameD[((y * 512) + x)]
+                Pixel_Depth = frameD[(y + (x * 512))]
                 print(Pixel_Depth)
         ##output = cv2.bilateralFilter(output, 1, 150, 75)
+        frame = cv2.rotate(frame, cv2.cv2.ROTATE_90_CLOCKWISE)
         cv2.imshow('KINECT Video Stream', frame)
         cv2.setMouseCallback('KINECT Video Stream', click_event)
         output = None

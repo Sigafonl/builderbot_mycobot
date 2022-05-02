@@ -2,11 +2,13 @@ from pykinect2 import PyKinectV2
 from pykinect2.PyKinectV2 import *
 from pykinect2 import PyKinectRuntime
 import numpy as np
+import math
 import cv2
 import datetime
 from time import sleep
 import os
-thres = 0.42  # Threshold to detect object
+thres = 0.53  # Threshold to detect object
+
 
 kinect = PyKinectRuntime.PyKinectRuntime(PyKinectV2.FrameSourceTypes_Color)
 kinect_depth = PyKinectRuntime.PyKinectRuntime(PyKinectV2.FrameSourceTypes_Depth)
@@ -14,18 +16,19 @@ kinect_depth = PyKinectRuntime.PyKinectRuntime(PyKinectV2.FrameSourceTypes_Depth
 
 sleep(2)
 colorFrame = kinect.get_last_color_frame()
-print(colorFrame.size)# PyKinect2 returns a color frame in a linear array of size (8294400,)
 colorFrame = colorFrame.reshape((1080, 1920 ,4)) #.astype(np.uint8) # pictures are 1920 columns x 1080 rows with 4 bytes (BGRA) per pixel
 img = colorFrame[:,580:1660, :3]
 img = cv2.resize(img,(512,424))
+img = cv2.rotate(img, cv2.cv2.ROTATE_90_CLOCKWISE)
 cv2.waitKey(1)
 sleep(2)
 
 # checking for depth frame
 frame = kinect_depth.get_last_depth_frame() # retrieving depth frame
-print(frame.size)
+
 frame = frame.astype(np.uint8)
 frame = np.reshape(frame, (424, 512))
+frame = cv2.rotate(frame,cv2.cv2.ROTATE_90_CLOCKWISE)
 frameD = kinect_depth._depth_frame_data  # retrieving depth frame data
 frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
 
@@ -51,9 +54,20 @@ with open(classFile,"rt") as f:
             img = np.array(img)
             x = int((((box[0]) + box[2])+box[0])/2)
             y = int((((box[1]) + box[3])+box[1])/2)
-            print(classNames[classId - 1], bbox) #edit here
-            Pixel_Depth = kinect_depth._depth_frame_data[((y*512) + x)] #<ctypes.wintypes.LP_c_ushort object at 0x000001A698686648>
-            print(Pixel_Depth)
+            print(classNames[classId - 1]) #edit here
+
+
+            Pixel_Depth = kinect_depth._depth_frame_data[(y + (x * 512))] #<ctypes.wintypes.LP_c_ushort object at 0x000001A698686648>
+            Pixel_Depth = math.sqrt((Pixel_Depth**2) - (475**2))
+            z = (635 - Pixel_Depth) / 1000  #665 gives us front of ball
+            print("Distance from Robot" , z)
+            if (x<220):
+                print(220-x)
+
+            if (x>220):
+                y = x-220
+                print(224 - y)
+
             cv2.rectangle(img, box, color=(0, 255, 0), thickness=2)
             cv2.putText(img, classNames[classId - 1].upper() + " CFD: " +str(round(confidence * 100, 2)), (box[0] , box[1] ),
                         cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 255, 0), 2)
